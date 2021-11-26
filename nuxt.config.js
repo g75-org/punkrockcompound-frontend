@@ -15,7 +15,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ['@/assets/main.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -43,7 +43,16 @@ export default {
     '@nuxt/content',
     // https://strapi.nuxtjs.org/
     '@nuxtjs/strapi',
+    // https://openbase.com/js/@nuxtjs/markdownit/documentation
+    '@nuxtjs/markdownit',
   ],
+
+  markdownit: {
+    // preset: 'default',
+    // linkify: true,
+    // breaks: true,
+    // injected: true,
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
