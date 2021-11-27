@@ -1,36 +1,77 @@
 <template>
-  <div>
-    <section>
-      <h1>{{ post.title }}</h1>
-      <p>{{ post.description }}</p>
-      <nuxt-content :document="post"></nuxt-content>
-      <!-- security issue  -->
-      <br />
-      <hr />
-      <br />
+  <div class="container">
+    <div class="flex flex-col items-center mt-20">
+      <div class="flex flex-col my-auto border-4 border-primary max-w-4xl p-16">
+        <div class="flex flex-row items-center">
+          <div class="w-1/4">email:</div>
+          <input
+            v-model="identifier"
+            class="border border-primary ml-4 pl-4 w-3/4"
+            type="text"
+          />
+        </div>
+        <div class="flex flex-row items-center mt-2">
+          <div class="w-1/4">password:</div>
+          <input
+            v-model="password"
+            class="border border-primary ml-4 pl-4 w-3/4"
+            :type="showPass ? 'text' : 'password'"
+          />
+        </div>
+        <button class="button-1 mt-4" @click="login">login</button>
+      </div>
+    </div>
 
-      <div v-html="mdBio"></div>
-      <!-- <div>{{ mdBio }}</div> -->
-    </section>
-    <!-- <pre>{{ posts }}</pre> -->
+    <div v-if="token">token: {{ token }}</div>
+    <pre v-if="user">{{ user }}</pre>
+
+    <div class="container">
+      {{ identifier }}
+      {{ password }}
+      <p>
+        isDev: {{ isDev }}
+        <br>
+        backendUrl: {{ backendUrl }}
+        <br />
+        frontendUrl: {{ frontendUrl }}
+      </p>
+      <hr />
+      <nuxt-content :document="page" />
+    </div>
   </div>
 </template>
 
 <script>
 // localhost:1337/bands/11
 export default {
-  async asyncData({ $axios, $md, $content }) {
-    // console.log('this is running')
-    const post = await $content('hello').fetch()
-    const bands = await $axios.$get('http://localhost:1337/bands/11')
-    const mdBio = $md.render(bands.bio)
-    // console.log('this is here in the md ', posts)
-    // console.log('is there bands ', bands)
+  async asyncData({ $content, $config: { backendUrl, frontendUrl, isDev } }) {
+    const page = await $content('index').fetch()
     return {
-      bands,
-      mdBio,
-      post,
+      page,
+      backendUrl,
+      frontendUrl,
+      isDev,
+      identifier: isDev ? 'admin@email.com' : '',
+      password: isDev ? 'password' : '',
     }
+  },
+  data: () => {
+    return {
+      showPass: false,
+      token: null,
+      user: null,
+    }
+  },
+  methods: {
+    async login() {
+      const { user, jwt: token } = await this.$strapi.login({
+        identifier: this.identifier,
+        password: this.password,
+      })
+      console.log(user, token) // eslint-disable-line no-console
+      this.token = token
+      this.user = user
+    },
   },
 }
 </script>
