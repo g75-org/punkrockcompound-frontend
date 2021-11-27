@@ -15,7 +15,11 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['@/assets/main.css'],
+  css: [
+    '@/assets/css/typography.css',
+    '@/assets/css/global.css',
+    '@/assets/css/main.css',
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -62,6 +66,17 @@ export default {
     manifest: {
       lang: 'en',
     },
+  },
+  strapi: {
+    url: process.env.BACKEND_URL || 'http://localhost:1337',
+  },
+  publicRuntimeConfig: {
+    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+    backendUrl: process.env.BACKEND_URL || 'http://localhost:1337',
+    isDev: process.env.NODE_ENV === 'development' || false,
+  },
+  privateRuntimeConfig: {
+    // apiSecret: process.env.API_SECRET
   },
 
   // Content module configuration: https://go.nuxtjs.dev/config-content
