@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!-- basic-login -->
     <div class="flex flex-col items-center mt-20">
       <div class="flex flex-col my-auto border-4 border-primary max-w-4xl p-16">
         <div class="flex flex-row items-center">
@@ -22,27 +23,26 @@
       </div>
     </div>
 
-    <div v-if="token">token: {{ token }}</div>
-    <pre v-if="user">{{ user }}</pre>
-
-    <div class="container">
-      {{ identifier }}
-      {{ password }}
-      <p>
-        isDev: {{ isDev }}
-        <br>
-        backendUrl: {{ backendUrl }}
-        <br />
-        frontendUrl: {{ frontendUrl }}
-      </p>
+    <!-- if logginIn show stuff -->
+    <div v-if="token" class="mt-16">
       <hr />
-      <nuxt-content :document="page" />
+      token: {{ token }}
     </div>
+    <pre v-if="user">user: {{ user }}</pre>
+
+    <div>
+      <div>{{ identifier }}</div>
+      <div>{{ password }}</div>
+      <div v-show="isDev">isDev: {{ isDev }}</div>
+      <div>backendUrl: {{ backendUrl }}</div>
+      <div>frontendUrl: {{ frontendUrl }}</div>
+    </div>
+    <hr />
+    <nuxt-content :document="page" />
   </div>
 </template>
 
 <script>
-// localhost:1337/bands/11
 export default {
   async asyncData({ $content, $config: { backendUrl, frontendUrl, isDev } }) {
     const page = await $content('index').fetch()
