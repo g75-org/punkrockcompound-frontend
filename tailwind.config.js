@@ -4,9 +4,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#243c5a',
-        secondary: '#9CA3AF',
-        accent: '#243c5a',
+        primary: '#ee0003',
+        secondary: '#04151F',
+        accent: '#EAF2EF',
         danger: '#991B1B',
         warning: '#F59E0B',
       },
@@ -46,9 +46,10 @@ module.exports = {
         'Courier\\ New',
         'monospace',
       ],
-      heading: [],
+      heading: ['Candal', 'sans-serif'],
+      headingTwo: ['Sans\\ Source\\ Pro', 'sans-serif'],
       accent: [],
-      body: [],
+      body: ['Source\\ Sans\\ Pro', 'sans-serif'],
     },
   },
   variants: {
