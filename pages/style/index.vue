@@ -89,6 +89,20 @@
         </div>
         <hr class="border border-black my-10" />
       </section>
+      <section class="w-full mx-auto my-4 md:w-3/5">
+        <div class="w-full md:w-3/5">
+          <h2>Colors Two</h2>
+        </div>
+        <!-- Coolors Palette Widget -->
+        <div class="flex flex-col gap-6">
+          <div v-for="(colorHex, index) in colorsTwo" :key="colorHex + index">
+            <div :style="{ backgroundColor: `#${colorHex}` }" class="h-28 p-6">
+              <p class="text-white">#{{ colorHex }}</p>
+            </div>
+          </div>
+        </div>
+        <hr class="border border-black my-10" />
+      </section>
       <!-- Buttons -->
       <section class="w-full mx-auto my-4 md:w-3/5">
         <div class="w-full md:w-3/5">
@@ -141,6 +155,7 @@ export default {
   data() {
     return {
       colors: ['ee0003', '04151F', 'EAF2EF'],
+      colorsTwo: ['252525', '000000', 'ee0003', 'EAF2EF'],
     }
   },
 }
