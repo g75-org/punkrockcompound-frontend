@@ -1,7 +1,11 @@
 <template>
-  <div class="w-screen p-4 flex items-center">
+  <div class="w-screen p-4 flex items-center bg-white shad">
     <!-- mobile view -->
-    <div class="flex items-center">
+
+    <!-- mobile header  -->
+
+    <!-- mobile logo -->
+    <div class="flex items-center z-40">
       <div class="pr-2">
         <img
           style="height: 50px; width: 50px"
@@ -9,45 +13,42 @@
           alt="punk rock compound icon"
         />
       </div>
-      <div :class="{ blackTitle: isOpen, whiteTitle: !isOpen }">
+      <div
+        :class="{ blackTitle: isOpen, whiteTitle: !isOpen }"
+        class="transition-all"
+      >
         Punk Rock Compound
       </div>
     </div>
+    <!-- end of mobile logo -->
+
+    <!-- Menu Icon -->
     <div
       @click="toggleMenu"
       class="transition-all flex-grow justify-center flex flex-col items-end z-20"
     >
       <div
-        style="height: 4px"
-        class="menu w-10 bg-black"
+        style="height: 3px"
+        class="menu w-8 bg-black"
         :class="{ openOne: isOpen, close: !isOpen }"
       ></div>
       <div
-        style="height: 4px"
-        class="w-10 bg-black"
+        style="height: 3px"
+        class="w-8 bg-black"
         :class="{ openTwo: isOpen, close: !isOpen }"
       ></div>
       <div
-        style="height: 4px"
-        class="w-10 bg-black"
-        :class="{ openHide: isOpen }"
+        style="height: 3px"
+        class="w-8 bg-black"
+        :class="{ openMid: isOpen }"
       ></div>
     </div>
-    <!-- mobile slide in menu -->
-    <!-- end of mobile vue -->
+    <!-- end of menu icon -->
 
-    <!-- <nav class="hidden lg:block">
-      <ul>
-        <li>link one</li>
-        <li>link one</li>
-        <li>link one</li>
-        <li>link one</li>
-        <li>link one</li>
-      </ul>
-    </nav> -->
+    <!-- Mobile menu slide out  -->
     <section
       :class="{ modal: isOpen, closeMenu: !isOpen }"
-      class="flex flex-col justify-around items-center py-10"
+      class="flex flex-col justify-around items-center py-10 z-10"
     >
       <p style="color: white">Home</p>
       <p style="color: white">Radio</p>
@@ -55,6 +56,9 @@
       <p style="color: white">News</p>
       <p style="color: white">Login / Signup</p>
     </section>
+    <!-- end of mobile menu slide out -->
+
+    <!-- this is a new componet the all bands view  -->
   </div>
 </template>
 
@@ -95,13 +99,12 @@ export default {
   transition: all;
   transition-duration: 1s;
   background-color: black;
-  position: absolute;
+  position: fixed;
   height: 100vh;
   width: 100vw;
   left: 0;
   top: 0;
   opacity: 1;
-  z-index: -9;
 }
 .openOne {
   transition: all;
@@ -132,5 +135,13 @@ export default {
   top: 0;
   opacity: 1;
   z-index: -9;
+}
+
+.openMid {
+  display: none;
+}
+
+.shad {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 </style>

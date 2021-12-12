@@ -20,6 +20,8 @@
           />
         </div>
         <button class="button-1 mt-4" @click="login">login</button>
+        <button class="button-1 mt-4" @click="login">login</button>
+        <section></section>
       </div>
     </div>
 
@@ -53,6 +55,7 @@ export default {
       isDev,
       identifier: isDev ? 'admin@email.com' : '',
       password: isDev ? 'password' : '',
+      bands: null,
     }
   },
   data: () => {
@@ -65,8 +68,10 @@ export default {
   methods: {
     async login() {
       const { user, jwt: token } = await this.$strapi.login({
-        identifier: this.identifier,
-        password: this.password,
+        // identifier: this.identifier,
+        // password: this.password,
+        identifier: 'jack@gmail.com',
+        password: 'password',
       })
       console.log(user, token) // eslint-disable-line no-console
       this.token = token

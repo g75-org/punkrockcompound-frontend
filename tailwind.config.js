@@ -27,6 +27,7 @@ module.exports = {
         'Segoe\\ UI\\ Emoji',
         'Segoe\\ UI\\ Symbol',
         'Noto\\ Color\\ Emoji',
+        'Raleway',
       ],
       serif: [
         'ui-serif',
@@ -35,6 +36,7 @@ module.exports = {
         'Times\\ New\\ Roman',
         'Times',
         'serif',
+        'Raleway',
       ],
       mono: [
         'ui-monospace',
@@ -44,6 +46,7 @@ module.exports = {
         'Consolas',
         'Liberation\\ Mono',
         'Courier\\ New',
+        'Raleway',
         'monospace',
       ],
       heading: ['Candal', 'sans-serif'],
