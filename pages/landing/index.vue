@@ -53,38 +53,31 @@
 
     <!-- The vue plugin is client only and does not work on the server side rendering ... look at the docs -->
     <!-- Slider is for user to see the bands and should be wraped in a nuxt link to link to the band page -->
+
     <section class="px-4">
       <h2>View Bands</h2>
 
       <!-- want the styles to be mobile only 300px -->
+
       <carousel :perPageCustom="[[300, 1]]">
-        <slide>
+        <slide v-for="(band, index) in bandsTest" :key="index">
           <div class="p-1">
             <img
-              style="height: 300px; width: 500px"
+              style="height: 250px; width: 100%"
+              class="object-fit:cover"
               src="weezer_cover.jpeg"
               alt=""
             />
-          </div>
-        </slide>
-        <slide>
-          <div class="p-1">
-            <img src="weezer_cover.jpeg" alt="" />
-          </div>
-        </slide>
-        <slide>
-          <div class="p-1">
-            <img src="weezer_cover.jpeg" alt="" />
-          </div>
-        </slide>
-        <slide>
-          <div class="p-1">
-            <img src="weezer_cover.jpeg" alt="" />
+            <div class="w-full h-14 bg-black p-4">
+              <p class="text-green-400 mt-0 text-lg">{{ band.bandTitle }}</p>
+            </div>
           </div>
         </slide>
       </carousel>
     </section>
+
     <!-- filler section to give space -->
+
     <section class="py-10 w-screen h-24">
       <h4>Hello this is filler text</h4>
     </section>
@@ -95,6 +88,7 @@
 export default {
   async asyncData({ $strapi }) {
     const bands = await $strapi.find('bands')
+
     // const featured = bands[Math.floor(Math.random() * bands.length)]
 
     const featured = bands[0]
@@ -111,6 +105,24 @@ export default {
       name: 'nick',
       music: null,
       featured: null,
+      bandsTest: [
+        {
+          bandTitle: 'Weezer',
+          img: 'weezer_cover.jpeg',
+        },
+        {
+          bandTitle: 'Weezer',
+          img: 'weezer_cover.jpeg',
+        },
+        {
+          bandTitle: 'Weezer',
+          img: 'weezer_cover.jpeg',
+        },
+        {
+          bandTitle: 'Weezer',
+          img: 'weezer_cover.jpeg',
+        },
+      ],
     }
   },
 }
