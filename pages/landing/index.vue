@@ -1,10 +1,13 @@
 <template>
+  <!-- notes for getting band image -->
+  <!-- img url for the band cover is  <img :src="`http://localhost:1337${band.coverMain[0].url}`" alt="" /> -->
+  <!-- getting band name is band.name -->
   <!-- This is the image and the band title gotten from the featured band cover and title  -->
   <div>
     <section class="relative">
       <img
         style="min-height: 40vh"
-        :src="`http://localhost:1337${featured.albums[0].Cover.url}`"
+        :src="`http://localhost:1337${featured.coverMain[0].url}`"
         alt="ablum cover"
         class="object-fill w-screen"
       />
@@ -58,18 +61,18 @@
       <h2>View Bands</h2>
 
       <!-- want the styles to be mobile only 300px -->
-
+      <!-- write some logic to filter out the featured band -->
       <carousel :perPageCustom="[[300, 1]]">
-        <slide v-for="(band, index) in bandsTest" :key="index">
+        <slide v-for="(band, index) in bandsInSlider" :key="index">
           <div class="p-1">
             <img
               style="height: 250px; width: 100%"
               class="object-fit:cover"
-              src="weezer_cover.jpeg"
+              :src="`http://localhost:1337${band.coverMain[0].url}`"
               alt=""
             />
             <div class="w-full h-14 bg-black p-4">
-              <p class="text-green-400 mt-0 text-lg">{{ band.bandTitle }}</p>
+              <p class="text-green-400 mt-0 text-lg">{{ band.name }}</p>
             </div>
           </div>
         </slide>
@@ -77,10 +80,6 @@
     </section>
 
     <!-- filler section to give space -->
-
-    <section class="py-10 w-screen h-24">
-      <h4>Hello this is filler text</h4>
-    </section>
   </div>
 </template>
 
@@ -93,36 +92,20 @@ export default {
 
     const featured = bands[0]
     const album = featured.albums[0]
+    const bandsInSlider = bands.filter((b) => {
+      return b.name !== featured.name
+    })
 
     return {
       bands,
       featured,
+      bandsInSlider,
       album,
     }
   },
   data() {
     return {
-      name: 'nick',
-      music: null,
-      featured: null,
-      bandsTest: [
-        {
-          bandTitle: 'Weezer',
-          img: 'weezer_cover.jpeg',
-        },
-        {
-          bandTitle: 'Weezer',
-          img: 'weezer_cover.jpeg',
-        },
-        {
-          bandTitle: 'Weezer',
-          img: 'weezer_cover.jpeg',
-        },
-        {
-          bandTitle: 'Weezer',
-          img: 'weezer_cover.jpeg',
-        },
-      ],
+      name: 'hello',
     }
   },
 }
