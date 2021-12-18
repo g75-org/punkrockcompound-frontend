@@ -2,16 +2,20 @@
   <!-- get sont is album.songs[0].songAudio.url -->
   <div>
     <section class="bg-white py-6 px-4 w-screen">
+      <!-- <pre>{{ album }}</pre> -->
       <div class="w-screen max-w-full">
         <!-- this is the song that is now ready to play -->
-        <p class="m-0 p-0 text-2xl font-bold">{{ songToPlay.songTitle }}</p>
+        <p v-if="songToPlay" class="m-0 p-0 text-2xl font-bold">
+          {{ songToPlay.songTitle }}
+        </p>
         <!-- Audio tag  -->
-        <audio
-          id="player"
-          class="w-full mt-4"
-          controls
-          :src="`http://localhost:1337${songToPlay.songAudio.url}`"
-        ></audio>
+        <audio id="player" class="w-full mt-4" controls>
+          <source
+            id="playerSource"
+            v-if="songToPlay"
+            :src="`http://localhost:1337${songToPlay.songAudio.url}`"
+          />
+        </audio>
       </div>
     </section>
     <!-- here is the problem -->
@@ -31,9 +35,16 @@
               class="px-4"
             />
             <img
-              v-else
+              v-else-if="song.songTitle == songToPlay.songTitle && isPlaying"
               style="height: 10px; justify-self: flex-start"
               src="pause.svg"
+              alt=""
+              class="px-4"
+            />
+            <img
+              v-else
+              style="height: 10px; justify-self: flex-start"
+              src="play.svg"
               alt=""
               class="px-4"
             />
@@ -61,13 +72,35 @@ export default {
   data() {
     return {
       songToPlay: this.album.songs[0],
+      isPlaying: false,
     }
   },
   methods: {
     setSong(song) {
       const player = document.getElementById('player')
-      this.songToPlay = song
-      player.play()
+      if (!this.isPlaying && song.songTitle !== this.songToPlay.songTitle) {
+        this.songToPlay = song
+        player.load()
+        player.play()
+        this.isPlaying = true
+      } else if (
+        !this.isPlaying &&
+        song.songTitle === this.songToPlay.songTitle
+      ) {
+        player.play()
+        this.isPlaying = true
+      } else if (
+        this.isPlaying &&
+        song.songTitle !== this.songToPlay.songTitle
+      ) {
+        this.songToPlay = song
+        player.load()
+        player.play()
+      } else {
+        console.log('this is the else block')
+        player.pause()
+        this.isPlaying = false
+      }
     },
   },
 }
