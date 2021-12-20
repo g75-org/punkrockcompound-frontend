@@ -78,7 +78,8 @@ export default {
   methods: {
     setSong(song) {
       const player = document.getElementById('player')
-      if (!this.isPlaying && song.songTitle !== this.songToPlay.songTitle) {
+      if (player.paused && song.songTitle !== this.songToPlay.songTitle) {
+        console.log('this is the play ')
         this.songToPlay = song
         player.load()
         player.play()
@@ -96,8 +97,12 @@ export default {
         this.songToPlay = song
         player.load()
         player.play()
-      } else {
-        console.log('this is the else block')
+      } else if (player.paused && this.songTopPlay === song.songTitle) {
+        console.log('this is the bug statements')
+        player.play()
+        this.playing = true
+      } else if (player !== player.paused) {
+        console.log('this is the playing ')
         player.pause()
         this.isPlaying = false
       }

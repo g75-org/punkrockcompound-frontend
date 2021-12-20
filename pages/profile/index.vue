@@ -1,8 +1,6 @@
 <template>
   <div>
-    <Nav />
-    <Nuxt />
-    <Footer />
+    <h1>This is the profile page</h1>
   </div>
 </template>
 
