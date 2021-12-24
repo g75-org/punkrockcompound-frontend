@@ -1,12 +1,15 @@
 <template>
   <!-- get sont is album.songs[0].songAudio.url -->
   <div>
-    <section class="bg-white py-6 px-4 w-screen">
+    <section class="bg-white px-4 w-screen">
       <!-- <pre>{{ album }}</pre> -->
       <div class="w-screen max-w-full">
         <!-- this is the song that is now ready to play -->
-        <p v-if="songToPlay" class="m-0 p-0 text-2xl font-bold">
+        <p v-if="songToPlay && suffulePlay" class="m-0 pt-6 text-2xl font-bold">
           {{ songToPlay.songTitle }}
+        </p>
+        <p v-if="songToPlay && albumPlayer" class="m-0 p-0 text-2xl font-bold">
+          {{ album.title }}
         </p>
         <!-- Audio tag  -->
         <audio id="player" class="w-full mt-4" controls>
@@ -20,8 +23,8 @@
     </section>
     <!-- here is the problem -->
     <section class="bg-white">
-      <div class="w-full mt-6 h-auto shadow-sm">
-        <h6 class="pl-4">Coming up next</h6>
+      <div class="w-full mt-2 h-auto shadow-sm">
+        <h6 v-if="!albumPlayer" class="pl-4">{{ title }}</h6>
         <div v-for="song in album.songs" :key="song.id" class="w-full">
           <div
             @click="setSong(song)"
@@ -66,6 +69,18 @@ export default {
   props: {
     album: {
       type: Object,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    suffulePlay: {
+      type: Boolean,
+      required: true,
+    },
+    albumPlayer: {
+      type: Boolean,
       required: true,
     },
   },

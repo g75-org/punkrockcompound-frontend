@@ -1,6 +1,7 @@
 <template>
   <div>
     <section class="relative">
+      <LiveLink style="z-index: 999999999999999" />
       <img
         class="object-fill w-screen h-2/5"
         :src="`http://localhost:1337${featured.coverMain[0].url}`"
@@ -12,7 +13,12 @@
         <h2>{{ featured.name }}</h2>
       </section>
     </section>
-    <SongPlayer :album="album" />
+    <SongPlayer
+      :suffulePlay="true"
+      :albumPlayer="false"
+      title="coming up next"
+      :album="album"
+    />
     <MobileSlider :bandsInSlider="bandsInSlider" />
   </div>
 </template>

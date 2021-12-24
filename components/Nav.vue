@@ -50,11 +50,15 @@
       :class="{ modal: isOpen, closeMenu: !isOpen }"
       class="flex flex-col justify-around items-center py-10 z-10"
     >
-      <p style="color: white">Home</p>
-      <p style="color: white">Radio</p>
-      <p style="color: white">Music videos</p>
-      <p style="color: white">News</p>
-      <p style="color: white">Login / Signup</p>
+      <span @click="toggleMenu">
+        <nuxt-link to="/landing">
+          <p style="color: white">Home</p>
+        </nuxt-link>
+      </span>
+      <p @click="toggleMenu" style="color: white">Radio</p>
+      <p @click="toggleMenu" style="color: white">Music videos</p>
+      <p @click="toggleMenu" style="color: white">News</p>
+      <p @click="toggleMenu" style="color: white">Login / Signup</p>
     </section>
     <!-- end of mobile menu slide out -->
 
