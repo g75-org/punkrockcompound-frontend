@@ -19,6 +19,7 @@ export default {
     '@/assets/css/typography.css',
     '@/assets/css/global.css',
     '@/assets/css/main.css',
+    '@/assets/css/form.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -35,6 +36,7 @@ export default {
     '@nuxtjs/stylelint-module',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@braid/vue-formulate/nuxt',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

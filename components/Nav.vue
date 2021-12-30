@@ -47,6 +47,7 @@
 
     <!-- Mobile menu slide out  -->
     <section
+      v-if="bandId"
       :class="{ modal: isOpen, closeMenu: !isOpen }"
       class="flex flex-col justify-around items-center py-10 z-10"
     >
@@ -55,10 +56,58 @@
           <p style="color: white">Home</p>
         </nuxt-link>
       </span>
-      <p @click="toggleMenu" style="color: white">Radio</p>
-      <p @click="toggleMenu" style="color: white">Music videos</p>
-      <p @click="toggleMenu" style="color: white">News</p>
-      <p @click="toggleMenu" style="color: white">Login / Signup</p>
+      <span @click="toggleMenuProfile">
+        <nuxt-link :to="!bandId ? '/profile' : `/profile/${bandId}`">
+          <p style="color: white">Profile id</p>
+        </nuxt-link>
+      </span>
+      <span @click="toggleMenu">
+        <nuxt-link :to="!bandId ? '/profile' : `/profile/${bandId}`">
+          <p style="color: white">Videos</p>
+        </nuxt-link>
+      </span>
+      <span @click="toggleMenu">
+        <nuxt-link :to="!bandId ? '/profile' : `/profile/${bandId}`">
+          <p style="color: white">Bands</p>
+        </nuxt-link>
+      </span>
+      <span @click="logOutMethod">
+        <nuxt-link to="/">
+          <p style="color: white">Login/Signout</p>
+        </nuxt-link>
+      </span>
+    </section>
+
+    <section
+      v-else
+      :class="{ modal: isOpen, closeMenu: !isOpen }"
+      class="flex flex-col justify-around items-center py-10 z-10"
+    >
+      <span @click="toggleMenu">
+        <nuxt-link to="/landing">
+          <p style="color: white">Home</p>
+        </nuxt-link>
+      </span>
+      <span @click="toggleMenuProfile">
+        <nuxt-link to="/profile">
+          <p style="color: white">Profile</p>
+        </nuxt-link>
+      </span>
+      <span @click="toggleMenu">
+        <nuxt-link to="/videos">
+          <p style="color: white">Videos</p>
+        </nuxt-link>
+      </span>
+      <span @click="toggleMenu">
+        <nuxt-link to="/bands">
+          <p style="color: white">Bands</p>
+        </nuxt-link>
+      </span>
+      <span @click="logOutMethod">
+        <nuxt-link to="/">
+          <p style="color: white">Login/Signout</p>
+        </nuxt-link>
+      </span>
     </section>
     <!-- end of mobile menu slide out -->
 
@@ -71,12 +120,36 @@ export default {
   data() {
     return {
       isOpen: false,
+      user: this.$strapi.user || null,
+      bandId: null,
     }
   },
+
   methods: {
     toggleMenu() {
       this.isOpen = !this.isOpen
     },
+    async toggleMenuProfile() {
+      this.isOpen = !this.isOpen
+      const user = await this.$strapi.user
+      console.log('this is getting the user', user)
+      this.bandId = await this.user.band
+      console.log('this is band id in togglle ', this.bandId)
+    },
+    async logOutMethod() {
+      await this.$strapi.logout()
+      this.bandId = null
+      this.isOpen = !this.isOpen
+    },
+  },
+  // Get the user to his profile page
+  async updated() {
+    if (this.$strapi.user) {
+      await console.log('user', this.$strapi.user)
+      if (this.$strapi.user.band) {
+        this.bandId = await this.$strapi.user.band.id
+      }
+    }
   },
 }
 </script>

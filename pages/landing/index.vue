@@ -4,7 +4,7 @@
       <LiveLink style="z-index: 999999999999999" />
       <img
         class="object-fill w-screen h-2/5"
-        :src="`http://localhost:1337${featured.coverMain[0].url}`"
+        :src="`http://localhost:1337${featured.coverMainUrl}`"
         alt="ablum cover"
       />
       <section
@@ -26,6 +26,7 @@
 <script>
 export default {
   async asyncData({ $strapi }) {
+    const userProfileId = await $strapi.user
     const bands = await $strapi.find('bands')
     // Gets a random band from the bands array
     // const featured = bands[Math.floor(Math.random() * bands.length)]
@@ -43,12 +44,17 @@ export default {
       featured,
       bandsInSlider,
       album,
+      userProfileId,
     }
   },
   data() {
     return {
+      bandId: null,
       message: 'hello',
     }
+  },
+  mounted() {
+    this.bandId = this.$strapi.user.band
   },
 }
 </script>

@@ -9,7 +9,7 @@
             <img
               style="height: 250px"
               class="object-cover w-full"
-              :src="`http://localhost:1337${band.coverMain[0].url}`"
+              :src="`http://localhost:1337${band.coverMainUrl}`"
               alt=""
             />
             <div class="w-full h-14 bg-black p-4">

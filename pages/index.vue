@@ -21,7 +21,7 @@
         </div>
         <button class="button-1 mt-4" @click="login">login</button>
         <button class="button-1 mt-4" @click="login">login</button>
-        <section></section>
+        <section>{{ identifier }}</section>
       </div>
     </div>
 
@@ -53,11 +53,14 @@ export default {
       backendUrl,
       frontendUrl,
       isDev,
-      identifier: isDev ? 'admin@email.com' : '',
-      password: isDev ? 'password' : '',
+      // identifier: isDev ? 'admin@email.com' : '',
+      // password: isDev ? 'password' : '',
+      identifier: '',
+      password: '',
       bands: null,
     }
   },
+  emits: ['login'],
   data: () => {
     return {
       showPass: false,
@@ -68,14 +71,13 @@ export default {
   methods: {
     async login() {
       const { user, jwt: token } = await this.$strapi.login({
-        // identifier: this.identifier,
-        // password: this.password,
-        identifier: 'jack@gmail.com',
-        password: 'password',
+        identifier: this.identifier,
+        password: this.password,
       })
       console.log(user, token) // eslint-disable-line no-console
       this.token = token
       this.user = user
+      this.$router.push('landing')
     },
   },
 }

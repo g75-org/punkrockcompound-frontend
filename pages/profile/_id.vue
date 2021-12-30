@@ -7,7 +7,7 @@
     >
       <img
         class="absolute top-0 left-0 object-cover w-full h-full"
-        :src="`http://localhost:1337${band.coverMain[0].url}`"
+        :src="`http://localhost:1337${band.coverMainUrl}`"
         alt=""
       />
       <!-- <div
