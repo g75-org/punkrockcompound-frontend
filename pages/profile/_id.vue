@@ -36,7 +36,7 @@
       <div class="flex">
         <h6 class="flex-1 font-medium">Members</h6>
         <div class="flex-1">
-          <p class="inline-block" v-for="member in members" :key="member">
+          <p v-for="member in members" :key="member" class="inline-block">
             {{ member }},
           </p>
         </div>
@@ -52,19 +52,19 @@
       <div class="flex pt-4">
         <h6 class="flex-1 mt-0 font-medium">Links</h6>
         <div class="flex-1">
-          <nuxt-link to="/" v-for="link in links" :key="link">
+          <nuxt-link v-for="(link, index) in links" :key="link + index" to="/">
             {{ link.text }},</nuxt-link
           >
         </div>
       </div>
     </section>
     <!-- Put the album slider here  -->
-    <section class="px-4 pt-8">
+    <section v-if="songList" class="px-4 pt-8">
       <h2 class="font-bold">Albums</h2>
-      <carousel paginationPadding="5" :perPageCustom="[[300, 1]]">
-        <slide v-for="(album, index) in band.albums" :key="index">
+      <carousel :pagination-padding="5" :per-page-custom="[[300, 1]]">
+        <slide v-for="(album, index) in band.albums" :key="album + index">
           <!-- <nuxt-link :to="`/profile/${album.id}`"> -->
-          <div @click="changeAlbum(index)" class="p-1">
+          <div class="p-1" @click="changeAlbum(index)">
             <img
               style="height: 250px"
               class="object-cover w-full"
@@ -79,7 +79,7 @@
         </slide>
       </carousel>
     </section>
-    <section class="py-2">
+    <section v-if="songList" class="py-2">
       <SongPlayer
         :albumPlayer="true"
         :suffulePlay="false"
@@ -126,13 +126,16 @@ export default {
       ],
     }
   },
+  mounted() {
+    if (this.band.albums) {
+      this.songList = this.band.albums[0]
+    }
+  },
+
   methods: {
     changeAlbum(albumIndex) {
       this.songList = this.band.albums[albumIndex]
     },
-  },
-  mounted() {
-    this.songList = this.band.albums[0]
   },
 }
 </script>

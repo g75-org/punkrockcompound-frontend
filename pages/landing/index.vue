@@ -14,6 +14,7 @@
       </section>
     </section>
     <SongPlayer
+      v-if="album"
       :suffulePlay="true"
       :albumPlayer="false"
       title="coming up next"
@@ -24,6 +25,11 @@
 </template>
 
 <script>
+// "@nuxtjs/stylelint-module": "^4.0.0",
+// "stylelint": "^13.13.1",
+    // "stylelint-config-prettier": "^8.0.2",
+    // "stylelint-config-standard": "^22.0.0"
+// "@nuxtjs/stylelint-module": "^4.0.0",
 export default {
   async asyncData({ $strapi }) {
     const userProfileId = await $strapi.user
