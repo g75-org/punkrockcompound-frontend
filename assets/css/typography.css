@@ -38,9 +38,9 @@ h6 {
 }
 
 /* other */
-p {
+/* p {
   @apply prose md:prose-lg lg:prose-xl xl:prose-2xl transform transition-all duration-150 mt-3;
-}
+} */
 
 
 

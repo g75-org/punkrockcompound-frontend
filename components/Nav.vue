@@ -124,7 +124,6 @@ export default {
       bandId: null,
     }
   },
-
   methods: {
     toggleMenu() {
       this.isOpen = !this.isOpen
@@ -133,7 +132,7 @@ export default {
       this.isOpen = !this.isOpen
       const user = await this.$strapi.user
       console.log('this is getting the user', user)
-      this.bandId = await this.user.band
+      this.bandId = await this.user.band.id
       console.log('this is band id in togglle ', this.bandId)
     },
     async logOutMethod() {
@@ -168,7 +167,6 @@ export default {
 .blackTitle {
   color: white;
 }
-
 .whiteTitle {
   color: black;
 }
@@ -213,11 +211,9 @@ export default {
   opacity: 1;
   z-index: -9;
 }
-
 .openMid {
   display: none;
 }
-
 .shad {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }

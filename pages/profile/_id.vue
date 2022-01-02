@@ -26,7 +26,7 @@
         class="w-11/12 bg-black shadow-2xl text-white px-8 py-8 z-50 mx-auto"
       >
         <h2 class="font-bold">Bio</h2>
-        <p class="text-white">{{ band.bio }}</p>
+        <div class="container_html" v-html="band.bio"></div>
       </section>
     </section>
     <!-- Additional Information -->
@@ -36,15 +36,20 @@
       <div class="flex">
         <h6 class="flex-1 font-medium">Members</h6>
         <div class="flex-1">
-          <p v-for="member in members" :key="member" class="inline-block">
-            {{ member }},
+          <p
+            style="margin-top: 12px"
+            v-for="member in band.members"
+            :key="member.memberName"
+            class="inline-block"
+          >
+            {{ member.memberName }},
           </p>
         </div>
       </div>
       <!-- genre -->
       <div class="flex">
         <h6 class="flex-1 font-medium">Genre</h6>
-        <div class="flex-1">
+        <div style="margin-top: 12px" class="flex-1">
           <p>{{ genre }}</p>
         </div>
       </div>
@@ -143,5 +148,9 @@ export default {
 <style scoped>
 .background_color_opacity {
   background: rgb(0 0 0 / 71%);
+}
+
+div.container_html > {
+  color: red !important;
 }
 </style>

@@ -25,11 +25,6 @@
 </template>
 
 <script>
-// "@nuxtjs/stylelint-module": "^4.0.0",
-// "stylelint": "^13.13.1",
-    // "stylelint-config-prettier": "^8.0.2",
-    // "stylelint-config-standard": "^22.0.0"
-// "@nuxtjs/stylelint-module": "^4.0.0",
 export default {
   async asyncData({ $strapi }) {
     const userProfileId = await $strapi.user
@@ -60,7 +55,7 @@ export default {
     }
   },
   mounted() {
-    this.bandId = this.$strapi.user.band
+    this.bandId = this.userProfileId.band
   },
 }
 </script>

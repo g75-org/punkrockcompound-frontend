@@ -1,7 +1,11 @@
 <template>
   <ClientOnly>
     <!-- Use the component in the right place of the template -->
-    <tiptap-vuetify v-model="content" :extensions="extensions" />
+    <tiptap-vuetify
+      @keydown="onKeyDown"
+      v-model="content"
+      :extensions="extensions"
+    />
 
     <template #placeholder> Loading... </template>
   </ClientOnly>
@@ -61,5 +65,11 @@ export default {
       <p>Write Your band bio here</p>
     `,
   }),
+
+  methods: {
+    onKeyDown() {
+      console.log(this.content)
+    },
+  },
 }
 </script>

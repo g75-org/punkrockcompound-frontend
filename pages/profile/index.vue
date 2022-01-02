@@ -27,9 +27,15 @@
           placeholder="enter your band name"
         />
         <p class="text-lg font-bold">Bio</p>
-        <section class="py-6">
-          <Editor />
-        </section>
+        <!-- <section class="py-6">
+          <Editor v-model="content" />
+        </section> -->
+        <ClientOnly>
+          <!-- Use the component in the right place of the template -->
+          <tiptap-vuetify v-model="content" :extensions="extensions" />
+
+          <template #placeholder> Loading... </template>
+        </ClientOnly>
 
         <FormulateInput
           id="genre"
@@ -88,30 +94,90 @@
 </template>
 
 <script>
-import Editor from '../../components/Editor'
+import {
+  TiptapVuetify,
+  Heading,
+  Bold,
+  Italic,
+  Strike,
+  Underline,
+  Code,
+  Paragraph,
+  BulletList,
+  OrderedList,
+  ListItem,
+  Link,
+  Blockquote,
+  HardBreak,
+  HorizontalRule,
+} from 'tiptap-vuetify'
+
+// import Editor from '../../components/Editor'
 export default {
-  components: {
-    Editor,
-  },
+  components: { TiptapVuetify },
+  // components: {
+  //   Editor,
+  // },
   data() {
     return {
+      extensions: [
+        Blockquote,
+        Link,
+        Underline,
+        Strike,
+        Italic,
+        ListItem,
+        BulletList,
+        OrderedList,
+        [
+          Heading,
+          {
+            options: {
+              levels: [1, 2, 3],
+            },
+          },
+        ],
+        Bold,
+        Link,
+        Code,
+        HorizontalRule,
+        Paragraph,
+        HardBreak,
+      ],
       formValues: {},
       file: '',
       content: '',
+      userId: '',
     }
+  },
+
+  mounted() {
+    this.userId = this.$strapi.user.id
   },
   methods: {
     async handleFileUpload($event) {
       this.file = await $event.target.files[0]
     },
-    submitHandler() {
-      // const formData = new FormData()
-      // await formData.append('files', this.file)
-      // const image = await this.$strapi.create('upload', formData)
-      // console.log(image)
-      const { name, coverMainUrl, genre, phone, members } = this.formValues
-      console.log(this.formValues)
-      console.log(name, coverMainUrl, genre, phone, members)
+    async submitHandler() {
+      const formData = new FormData()
+      await formData.append('files', this.file)
+      const image = await this.$strapi.create('upload', formData)
+      const { name, genre, phone, members, email, city, state } =
+        this.formValues
+      const band = await this.$strapi.create('bands', {
+        name,
+        coverMainUrl: image[0].url,
+        genre,
+        phone,
+        email,
+        bio: this.content,
+        city,
+        members,
+        state,
+        users_permissions_user: this.userId,
+        // members,
+      })
+      console.log(band)
     },
   },
 }
