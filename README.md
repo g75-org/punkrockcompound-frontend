@@ -75,3 +75,11 @@ More information about the usage of this directory in [the documentation](https:
 - [] give user error message when loging in with the wrong details instead of error message
 - [] write logic to check if band has any albums
 - [] finish creating band
+
+### new notes
+
+- fix link to band profille page after creation
+  - emit event
+- [] add albums to creation page
+  - [] build figma first
+  - [] get all proper names for saving into the database

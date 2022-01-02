@@ -47,7 +47,6 @@
 
     <!-- Mobile menu slide out  -->
     <section
-      v-if="bandId"
       :class="{ modal: isOpen, closeMenu: !isOpen }"
       class="flex flex-col justify-around items-center py-10 z-10"
     >
@@ -56,9 +55,9 @@
           <p style="color: white">Home</p>
         </nuxt-link>
       </span>
-      <span @click="toggleMenuProfile">
+      <span @click="toggleMenu">
         <nuxt-link :to="!bandId ? '/profile' : `/profile/${bandId}`">
-          <p style="color: white">Profile id</p>
+          <p style="color: white">Profile</p>
         </nuxt-link>
       </span>
       <span @click="toggleMenu">
@@ -78,37 +77,6 @@
       </span>
     </section>
 
-    <section
-      v-else
-      :class="{ modal: isOpen, closeMenu: !isOpen }"
-      class="flex flex-col justify-around items-center py-10 z-10"
-    >
-      <span @click="toggleMenu">
-        <nuxt-link to="/landing">
-          <p style="color: white">Home</p>
-        </nuxt-link>
-      </span>
-      <span @click="toggleMenuProfile">
-        <nuxt-link to="/profile">
-          <p style="color: white">Profile</p>
-        </nuxt-link>
-      </span>
-      <span @click="toggleMenu">
-        <nuxt-link to="/videos">
-          <p style="color: white">Videos</p>
-        </nuxt-link>
-      </span>
-      <span @click="toggleMenu">
-        <nuxt-link to="/bands">
-          <p style="color: white">Bands</p>
-        </nuxt-link>
-      </span>
-      <span @click="logOutMethod">
-        <nuxt-link to="/">
-          <p style="color: white">Login/Signout</p>
-        </nuxt-link>
-      </span>
-    </section>
     <!-- end of mobile menu slide out -->
 
     <!-- this is a new componet the all bands view  -->
@@ -120,35 +88,50 @@ export default {
   data() {
     return {
       isOpen: false,
-      user: this.$strapi.user || null,
       bandId: null,
     }
   },
+  async updated() {
+    try {
+      const b = await this.$strapi.user
+      if (b && b.band) {
+        console.log(b, 'this is the user from the nav toggle menu')
+        if (typeof b.band === 'number') {
+          this.bandId = b.band
+        } else if (b.band.id) {
+          this.bandId = b.band.id
+        } else {
+          console.log('no band ')
+        }
+      }
+    } catch {
+      console.log('continue methods ')
+    }
+  },
   methods: {
-    toggleMenu() {
+    async toggleMenu() {
       this.isOpen = !this.isOpen
-    },
-    async toggleMenuProfile() {
-      this.isOpen = !this.isOpen
-      const user = await this.$strapi.user
-      console.log('this is getting the user', user)
-      this.bandId = await this.user.band.id
-      console.log('this is band id in togglle ', this.bandId)
+      try {
+        const b = await this.$strapi.user
+        if (b && b.band) {
+          console.log(b, 'this is the user from the nav toggle menu')
+          if (typeof b.band === 'number') {
+            this.bandId = b.band
+          } else if (b.band.id) {
+            this.bandId = b.band.id
+          } else {
+            console.log('no band ')
+          }
+        }
+      } catch {
+        console.log('continue methods ')
+      }
     },
     async logOutMethod() {
       await this.$strapi.logout()
       this.bandId = null
       this.isOpen = !this.isOpen
     },
-  },
-  // Get the user to his profile page
-  async updated() {
-    if (this.$strapi.user) {
-      await console.log('user', this.$strapi.user)
-      if (this.$strapi.user.band) {
-        this.bandId = await this.$strapi.user.band.id
-      }
-    }
   },
 }
 </script>

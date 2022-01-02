@@ -28,6 +28,7 @@
 export default {
   async asyncData({ $strapi }) {
     const userProfileId = await $strapi.user
+
     const bands = await $strapi.find('bands')
     // Gets a random band from the bands array
     // const featured = bands[Math.floor(Math.random() * bands.length)]
@@ -55,7 +56,11 @@ export default {
     }
   },
   mounted() {
-    this.bandId = this.userProfileId.band
+    if (this.userProfileId) {
+      this.bandId = this.userProfileId.band
+    } else {
+      console.log('there is no user logged in to the system yet')
+    }
   },
 }
 </script>

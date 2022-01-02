@@ -82,9 +82,9 @@
           validation="required"
         >
           <FormulateInput
-            name="name"
+            name="memberName"
             validation="required"
-            label="members name"
+            label="memberName"
           />
         </FormulateInput>
         <FormulateInput type="submit" label="Create Profile" />
@@ -152,7 +152,9 @@ export default {
   },
 
   mounted() {
-    this.userId = this.$strapi.user.id
+    if (this.$strapi.user) {
+      this.userId = this.$strapi.user.id
+    }
   },
   methods: {
     async handleFileUpload($event) {
@@ -164,6 +166,7 @@ export default {
       const image = await this.$strapi.create('upload', formData)
       const { name, genre, phone, members, email, city, state } =
         this.formValues
+      console.log('hello', members)
       const band = await this.$strapi.create('bands', {
         name,
         coverMainUrl: image[0].url,
