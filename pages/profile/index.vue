@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1 class="text-2xl text-center">Create Band Profile</h1>
     <section class="w-full px-10">
-      <!-- <label
-        >File
-        <input ref="file" type="file" @change="handleFileUpload($event)" />
-      </label> -->
-      <FormulateForm v-model="formValues" @submit="submitHandler">
+      <h1 class="text-2xl text-center">Create Band Profile</h1>
+      <FormulateForm
+        v-if="step === 1"
+        v-model="formValues"
+        @submit="submitHandler"
+      >
         <FormulateInput
           ref="file"
           name="coverMainUrl"
@@ -27,9 +27,6 @@
           placeholder="enter your band name"
         />
         <p class="text-lg font-bold">Bio</p>
-        <!-- <section class="py-6">
-          <Editor v-model="content" />
-        </section> -->
         <ClientOnly>
           <!-- Use the component in the right place of the template -->
           <tiptap-vuetify v-model="content" :extensions="extensions" />
@@ -56,7 +53,7 @@
           name="city"
           label="city"
           type="text"
-          placeholder="xxx-xxx-xxxx"
+          placeholder="Chicago"
         />
         <FormulateInput
           id="state"
@@ -70,16 +67,14 @@
           name="email"
           label="email"
           type="text"
-          placeholder="xxx-xxx-xxxx"
+          placeholder="youremail@gmail.com"
         />
-
         <FormulateInput
           type="group"
           name="members"
           :repeatable="true"
           label="Who is the band?"
           add-label="+ Add Member"
-          validation="required"
         >
           <FormulateInput
             name="memberName"
@@ -87,7 +82,62 @@
             label="memberName"
           />
         </FormulateInput>
-        <FormulateInput type="submit" label="Create Profile" />
+
+        <FormulateInput type="submit" label="next" />
+      </FormulateForm>
+      <!-- step two of form  -->
+      <FormulateForm
+        v-if="step === 2"
+        v-model="formValuesTwo"
+        @submit="submitHandlerTwo"
+      >
+        <FormulateInput
+          @change="logger"
+          type="group"
+          name="albums"
+          label="Who is the band?"
+          add-label="+ Add Member"
+          validation="required"
+        >
+          <!-- <FormulateInput
+            name="albumCover"
+            validation="required"
+            @change="handleFileUplaodAlbumCover($event)"
+            label="Album cover image"
+            type="image"
+          /> -->
+          <FormulateInput
+            @change="albumTitleChange($event)"
+            name="title"
+            validation="required"
+            label="Album title"
+          />
+          <FormulateInput
+            @change="logger"
+            @repeatableAdded="songIndexChange"
+            type="group"
+            name="songs"
+            :repeatable="true"
+            label="add song"
+            add-label="add song"
+          >
+            <FormulateInput
+              @change="loggerSongTitle($event)"
+              name="songTitle"
+              validation="required"
+              label="Song title"
+              type="text"
+            />
+            <FormulateInput
+              @change="handleFileUploadSong($event)"
+              name="songAudio"
+              validation="required"
+              label="Song File"
+              type="file"
+            />
+          </FormulateInput>
+        </FormulateInput>
+        <FormulateInput type="submit" label="next" />
       </FormulateForm>
     </section>
   </div>
@@ -115,11 +165,9 @@ import {
 // import Editor from '../../components/Editor'
 export default {
   components: { TiptapVuetify },
-  // components: {
-  //   Editor,
-  // },
   data() {
     return {
+      step: 1,
       extensions: [
         Blockquote,
         Link,
@@ -145,9 +193,18 @@ export default {
         HardBreak,
       ],
       formValues: {},
+      formValuesTwo: {},
       file: '',
+      fileSong: '',
+      songUrl: '',
+      songTitle: '',
+      fileAlbumCover: '',
       content: '',
       userId: '',
+      coverMainId: '',
+      songArray: [{}],
+      songIndex: 0,
+      albumTitle: '',
     }
   },
 
@@ -157,19 +214,64 @@ export default {
     }
   },
   methods: {
-    async handleFileUpload($event) {
-      this.file = await $event.target.files[0]
+    nextAddMusic() {
+      this.createdBandInfo = true
     },
+    logger() {
+      console.log(this.formValuesTwo.albums[0], 'songtitle ')
+    },
+    albumTitleChange($event) {
+      this.albumTitle = $event.target.value
+    },
+    songIndexChange() {
+      return this.songIndex + 1
+    },
+    loggerSongTitle($event) {
+      return (this.songArray[this.songIndex].songTitle = $event.target.value)
+    },
+    async handleFileUpload($event) {
+      console.log($event.target)
+      this.file = await $event.target.files[0]
+      console.log(this.file)
+    },
+    async handleFileUploadSong($event) {
+      this.fileSong = await $event.target.files[0]
+      console.log(this.fileSong)
+      // console.log(this.fileSong)
+      // const formData = new FormData()
+      // await formData.append('files', this.fileSong)
+      // const song = await this.$strapi.create('upload', formData)
+      // this.songUrl = song[0].url
+    },
+    // async handleFileUplaodAlbumCover($event) {
+    //   console.log($event.target)
+    //   this.fileAlbumCover = await $event.target.files[0]
+    // },
+
     async submitHandler() {
+      // need to do something here
+      // go to next form
+      // add data attribute
       const formData = new FormData()
       await formData.append('files', this.file)
       const image = await this.$strapi.create('upload', formData)
+      // save the image url for the cover of the band ... use later in last step of the form
+      this.coverMainUrlLocal = image[0].url
+      this.coverMainId = image[0].id
+      console.log(image)
+      // Move to next step in the form
+      this.step = 2
+    },
+
+    async submitHandlerTwo() {
+      // console.log(al, 'this is the al from the build songs ')
       const { name, genre, phone, members, email, city, state } =
         this.formValues
-      console.log('hello', members)
       const band = await this.$strapi.create('bands', {
         name,
-        coverMainUrl: image[0].url,
+        coverMainUrl: this.coverMainUrlLocal,
+        coverMainId: this.coverMainId,
+        albums: [{ title: this.albumTitle, songs: this.songArray }],
         genre,
         phone,
         email,
@@ -180,7 +282,9 @@ export default {
         users_permissions_user: this.userId,
         // members,
       })
-      console.log(band)
+      console.log(band, 'this is the final band ')
+
+      this.step = 2
     },
   },
 }
