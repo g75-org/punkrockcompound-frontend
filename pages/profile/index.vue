@@ -139,6 +139,7 @@
         </FormulateInput>
         <FormulateInput type="submit" label="next" />
       </FormulateForm>
+      <pre>{{ songIndex }}</pre>
     </section>
   </div>
 </template>
@@ -202,7 +203,7 @@ export default {
       content: '',
       userId: '',
       coverMainId: '',
-      songArray: [{}],
+      songArray: [],
       songIndex: 0,
       albumTitle: '',
     }
@@ -224,10 +225,14 @@ export default {
       this.albumTitle = $event.target.value
     },
     songIndexChange() {
-      return this.songIndex + 1
+      return this.songIndex++
     },
     loggerSongTitle($event) {
-      return (this.songArray[this.songIndex].songTitle = $event.target.value)
+      if (this.songArray[this.songIndex]) {
+        return (this.songArray[this.songIndex].songTitle = $event.target.value)
+      } else {
+        this.songArray.push({ songTitle: $event.target.value, songUrl: '' })
+      }
     },
     async handleFileUpload($event) {
       console.log($event.target)
@@ -236,12 +241,15 @@ export default {
     },
     async handleFileUploadSong($event) {
       this.fileSong = await $event.target.files[0]
-      console.log(this.fileSong)
-      // console.log(this.fileSong)
-      // const formData = new FormData()
-      // await formData.append('files', this.fileSong)
-      // const song = await this.$strapi.create('upload', formData)
-      // this.songUrl = song[0].url
+      const formData = new FormData()
+      await formData.append('files', this.fileSong)
+      const song = await this.$strapi.create('upload', formData)
+      this.songUrl = song[0].url
+      if (this.songArray[this.songIndex]) {
+        return (this.songArray[this.songIndex].songUrl = this.songUrl)
+      } else {
+        return this.songArray.push({ songTitle: '', songUrl: this.songUrl })
+      }
     },
     // async handleFileUplaodAlbumCover($event) {
     //   console.log($event.target)
