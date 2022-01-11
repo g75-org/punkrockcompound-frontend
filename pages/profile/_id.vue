@@ -68,19 +68,17 @@
       <h2 class="font-bold">Albums</h2>
       <carousel :pagination-padding="5" :per-page-custom="[[300, 1]]">
         <slide v-for="(album, index) in band.albums" :key="album + index">
-          <!-- <nuxt-link :to="`/profile/${album.id}`"> -->
           <div class="p-1" @click="changeAlbum(index)">
             <img
               style="height: 250px"
               class="object-cover w-full"
-              :src="`http://localhost:1337${album.Cover.url}`"
+              :src="`http://localhost:1337${album.coverUrl}`"
               alt=""
             />
             <div class="w-full h-14 bg-black p-4">
               <p class="text-green-400 mt-0 text-lg">{{ album.title }}</p>
             </div>
           </div>
-          <!-- </nuxt-link> -->
         </slide>
       </carousel>
     </section>

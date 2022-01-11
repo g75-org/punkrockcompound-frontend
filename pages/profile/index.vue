@@ -99,13 +99,13 @@
           add-label="+ Add Member"
           validation="required"
         >
-          <!-- <FormulateInput
+          <FormulateInput
             name="albumCover"
             validation="required"
             @change="handleFileUplaodAlbumCover($event)"
             label="Album cover image"
             type="image"
-          /> -->
+          />
           <FormulateInput
             @change="albumTitleChange($event)"
             name="title"
@@ -200,6 +200,7 @@ export default {
       songUrl: '',
       songTitle: '',
       fileAlbumCover: '',
+      albumCoverUrl: '',
       content: '',
       userId: '',
       coverMainId: '',
@@ -251,10 +252,10 @@ export default {
         return this.songArray.push({ songTitle: '', songUrl: this.songUrl })
       }
     },
-    // async handleFileUplaodAlbumCover($event) {
-    //   console.log($event.target)
-    //   this.fileAlbumCover = await $event.target.files[0]
-    // },
+
+    async handleFileUplaodAlbumCover($event) {
+      this.fileAlbumCover = await $event.target.files[0]
+    },
 
     async submitHandler() {
       // need to do something here
@@ -267,19 +268,31 @@ export default {
       this.coverMainUrlLocal = image[0].url
       this.coverMainId = image[0].id
       console.log(image)
-      // Move to next step in the form
       this.step = 2
     },
 
     async submitHandlerTwo() {
-      // console.log(al, 'this is the al from the build songs ')
+      const formDataAlbum = new FormData()
+      await formDataAlbum.append('files', this.fileAlbumCover)
+      const albumImage = await this.$strapi.create('upload', formDataAlbum)
+      // save the image url for the cover of the band ... use later in last step of the form
+      this.albumCoverUrl = albumImage[0].url
+      console.log(this.albumCoverUrl)
+      // console.log(this.albumCoverUrl)
+      // Move to next step in the form
       const { name, genre, phone, members, email, city, state } =
         this.formValues
       const band = await this.$strapi.create('bands', {
         name,
         coverMainUrl: this.coverMainUrlLocal,
         coverMainId: this.coverMainId,
-        albums: [{ title: this.albumTitle, songs: this.songArray }],
+        albums: [
+          {
+            title: this.albumTitle,
+            coverUrl: this.albumCoverUrl,
+            songs: this.songArray,
+          },
+        ],
         genre,
         phone,
         email,

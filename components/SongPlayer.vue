@@ -16,7 +16,7 @@
           <source
             id="playerSource"
             v-if="songToPlay"
-            :src="`http://localhost:1337${songToPlay.songAudio.url}`"
+            :src="`http://localhost:1337${songToPlay.songUrl}`"
           />
         </audio>
       </div>
