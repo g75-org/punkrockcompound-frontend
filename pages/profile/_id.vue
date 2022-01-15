@@ -1,6 +1,19 @@
 <template>
   <div class="relative">
-    <LiveLink style="z-index: 999999999999999" />
+    <!-- <LiveLink style="z-index: 999999999999999" /> -->
+    <div
+      style="z-index: 9999999999999999999999 !important"
+      v-if="userId === band.users_permissions_user.id"
+      class="absolute top-10 right-10"
+    >
+      <div @click="edit()">
+        <img
+          class="h-10 w-10"
+          src="http://localhost:3000/editing_white.svg"
+          alt=""
+        />
+      </div>
+    </div>
     <section
       style="z-index: -999"
       class="h-96 relative flex justify-center items-end"
@@ -10,6 +23,7 @@
         :src="`http://localhost:1337${band.coverMainUrl}`"
         alt=""
       />
+
       <!-- <div
         class="background_color_opacity absolute bottom-0 flex justify-center items-center h-20 left-0 w-full"
       > -->
@@ -25,13 +39,30 @@
         style="margin-top: -50px"
         class="w-11/12 bg-black shadow-2xl text-white px-8 py-8 z-50 mx-auto"
       >
-        <h2 class="font-bold">Bio</h2>
+        <div class="flex items-center">
+          <h2 class="flex-grow font-bold">Bio</h2>
+          <img
+            v-if="userId === band.users_permissions_user.id"
+            class="h-8 w-8"
+            src="http://localhost:3000/editing_white.svg"
+            alt=""
+          />
+        </div>
+
         <div class="container_html" v-html="band.bio"></div>
       </section>
     </section>
     <!-- Additional Information -->
     <section class="px-4 pt-6 mt-4">
-      <h2>Band Info</h2>
+      <div class="flex items-center">
+        <h2 class="flex-grow font-bold">Band Info</h2>
+        <img
+          v-if="userId === band.users_permissions_user.id"
+          class="h-8 w-8"
+          src="http://localhost:3000/editing.svg"
+          alt=""
+        />
+      </div>
       <!-- container for the list items -->
       <div class="flex">
         <h6 class="flex-1 font-medium">Members</h6>
@@ -65,7 +96,15 @@
     </section>
     <!-- Put the album slider here  -->
     <section v-if="songList" class="px-4 pt-8">
-      <h2 class="font-bold">Albums</h2>
+      <div class="flex items-center">
+        <h2 class="flex-grow font-bold">Albums</h2>
+        <img
+          v-if="userId === band.users_permissions_user.id"
+          class="h-8 w-8"
+          src="http://localhost:3000/editing.svg"
+          alt=""
+        />
+      </div>
       <carousel :pagination-padding="5" :per-page-custom="[[300, 1]]">
         <slide v-for="(album, index) in band.albums" :key="album + index">
           <div class="p-1" @click="changeAlbum(index)">
@@ -91,6 +130,15 @@
         :album="songList"
       />
     </section>
+    <!-- This is the edit popups -->
+    <section
+      v-if="popEdit"
+      class="h-full w-full bg-transparent fixed z-40 top-0 left-0 flex items-center justify-center"
+    >
+      <section class="h-1/2 w-10/12">
+        <component v-bind:is="editComp"></component>
+      </section>
+    </section>
   </div>
 </template>
 
@@ -102,7 +150,10 @@ export default {
   },
   data() {
     return {
+      userId: null,
       songList: null,
+      popEdit: false,
+      editComp: 'MainCoverEdit',
       members: ['Jack Richards', 'Peter Michales', 'Rod Dick', 'Nick Rogers'],
       genre: 'Punk Rock',
       upcomingEvents: [
@@ -130,6 +181,7 @@ export default {
     }
   },
   mounted() {
+    this.userId = this.$strapi.user.id
     if (this.band.albums) {
       this.songList = this.band.albums[0]
     }
@@ -138,6 +190,10 @@ export default {
   methods: {
     changeAlbum(albumIndex) {
       this.songList = this.band.albums[albumIndex]
+    },
+    edit(typeEdit) {
+      console.log('this is the edit logger ')
+      this.popEdit = true
     },
   },
 }
