@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="relative">
+    <section v-if="featured" class="relative">
       <LiveLink style="z-index: 999999999999999" />
       <img
         class="object-fill w-screen h-2/5"
@@ -14,7 +14,7 @@
       </section>
     </section>
     <SongPlayer
-      v-if="album"
+      v-if="featured && album"
       :suffulePlay="true"
       :albumPlayer="false"
       title="coming up next"
@@ -32,9 +32,9 @@ export default {
     const bands = await $strapi.find('bands')
     // Gets a random band from the bands array
     // const featured = bands[Math.floor(Math.random() * bands.length)]
-    const featured = bands[0]
+    const featured = bands[0] || null
     // Picks out an album from the featured band
-    const album = featured.albums[0]
+    const album = featured?.albums[0] || null
     // filters out the featured band from the slider
     const bandsInSlider = bands.filter((b) => {
       return b.name !== featured.name

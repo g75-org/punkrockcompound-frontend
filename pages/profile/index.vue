@@ -236,7 +236,6 @@ export default {
       }
     },
     async handleFileUpload($event) {
-      console.log($event.target)
       this.file = await $event.target.files[0]
       console.log(this.file)
     },
@@ -284,7 +283,9 @@ export default {
         this.formValues
       const band = await this.$strapi.create('bands', {
         name,
-        coverMainUrl: this.coverMainUrlLocal,
+        // coverMainUrl: this.coverMainUrlLocal,
+
+        coverMain: 'this is what we need to figure out',
         coverMainId: this.coverMainId,
         albums: [
           {
