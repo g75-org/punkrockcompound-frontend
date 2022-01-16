@@ -1,84 +1,72 @@
 <template>
-  <div class="container">
-    <!-- basic-login -->
-    <div class="flex flex-col items-center mt-20">
-      <div class="flex flex-col my-auto border-4 border-primary max-w-4xl p-16">
-        <div class="flex flex-row items-center">
-          <div class="w-1/4">email:</div>
-          <input
-            v-model="identifier"
-            class="border border-primary ml-4 pl-4 w-3/4"
-            type="text"
-          />
-        </div>
-        <div class="flex flex-row items-center mt-2">
-          <div class="w-1/4">password:</div>
-          <input
-            v-model="password"
-            class="border border-primary ml-4 pl-4 w-3/4"
-            :type="showPass ? 'text' : 'password'"
-          />
-        </div>
-        <button class="button-1 mt-4" @click="login">login</button>
-        <button class="button-1 mt-4" @click="login">login</button>
-        <section>{{ identifier }}</section>
-      </div>
-    </div>
-
-    <!-- if logginIn show stuff -->
-    <div v-if="token" class="mt-16">
-      <hr />
-      token: {{ token }}
-    </div>
-    <pre v-if="user">user: {{ user }}</pre>
-
-    <div>
-      <div>{{ identifier }}</div>
-      <div>{{ password }}</div>
-      <div v-show="isDev">isDev: {{ isDev }}</div>
-      <div>backendUrl: {{ backendUrl }}</div>
-      <div>frontendUrl: {{ frontendUrl }}</div>
-    </div>
-    <hr />
-    <nuxt-content :document="page" />
+  <div>
+    <section v-if="featured" class="relative">
+      <LiveLink style="z-index: 999999999999999" />
+      <img
+        class="object-fill w-screen h-2/5"
+        :src="`${featured.coverMainUrl}`"
+        alt="ablum cover"
+      />
+      <section
+        class="absolute bottom-0 left-0 text-white bg-black opacity-80 w-screen px-4 py-4 shad"
+      >
+        <h2>{{ featured.name }}</h2>
+      </section>
+    </section>
+    <SongPlayer
+      v-if="featured && album"
+      :suffulePlay="true"
+      :albumPlayer="false"
+      title="coming up next"
+      :album="album"
+    />
+    <MobileSlider :bandsInSlider="bandsInSlider" />
   </div>
 </template>
 
 <script>
 export default {
-  async asyncData({ $content, $config: { backendUrl, frontendUrl, isDev } }) {
-    const page = await $content('index').fetch()
+  async asyncData({ $strapi }) {
+    const userProfileId = await $strapi.user
+
+    const bands = await $strapi.find('bands')
+    // Gets a random band from the bands array
+    // const featured = bands[Math.floor(Math.random() * bands.length)]
+    const featured = bands[0] || null
+    // Picks out an album from the featured band
+    const album = featured?.albums[0] || null
+    // filters out the featured band from the slider
+    const bandsInSlider = bands.filter((b) => {
+      return b.name !== featured.name
+    })
+    // now to get the audio player going
+
     return {
-      page,
-      backendUrl,
-      frontendUrl,
-      isDev,
-      // identifier: isDev ? 'admin@email.com' : '',
-      // password: isDev ? 'password' : '',
-      identifier: '',
-      password: '',
-      bands: null,
+      bands,
+      featured,
+      bandsInSlider,
+      album,
+      userProfileId,
     }
   },
-  emits: ['login'],
-  data: () => {
+  data() {
     return {
-      showPass: false,
-      token: null,
-      user: null,
+      bandId: null,
+      message: 'hello',
     }
   },
-  methods: {
-    async login() {
-      const { user, jwt: token } = await this.$strapi.login({
-        identifier: this.identifier,
-        password: this.password,
-      })
-      console.log(user, token) // eslint-disable-line no-console
-      this.token = token
-      this.user = user
-      this.$router.push('landing')
-    },
+  mounted() {
+    if (this.userProfileId) {
+      this.bandId = this.userProfileId.band
+    } else {
+      console.log('there is no user logged in to the system yet')
+    }
   },
 }
 </script>
+
+<style land="css" scoped>
+* {
+  box-sizing: border-box;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <!-- <LiveLink style="z-index: 999999999999999" /> -->
+    <LiveLink style="z-index: 999999999999999" />
     <div
       style="z-index: 9999999999999999999999 !important"
       v-if="userId === band.users_permissions_user.id"
@@ -20,7 +20,7 @@
     >
       <img
         class="absolute top-0 left-0 object-cover w-full h-full"
-        :src="`http://localhost:1337${band.coverMainUrl}`"
+        :src="`${band.coverMainUrl}`"
         alt=""
       />
 
@@ -111,7 +111,7 @@
             <img
               style="height: 250px"
               class="object-cover w-full"
-              :src="`http://localhost:1337${album.coverUrl}`"
+              :src="`${album.coverUrl}`"
               alt=""
             />
             <div class="w-full h-14 bg-black p-4">
@@ -146,6 +146,7 @@
 export default {
   async asyncData({ $strapi, params }) {
     const band = await $strapi.findOne('bands', params.id) // When calling /abc the slug will be "abc"
+    console.log('getting the band')
     return { band }
   },
   data() {
@@ -181,7 +182,9 @@ export default {
     }
   },
   mounted() {
-    this.userId = this.$strapi.user.id
+    if (this.$strapi.user) {
+      this.userId = this.$strapi.user.id
+    }
     if (this.band.albums) {
       this.songList = this.band.albums[0]
     }

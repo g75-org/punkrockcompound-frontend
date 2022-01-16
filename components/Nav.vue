@@ -51,7 +51,7 @@
       class="flex flex-col justify-around items-center py-10 z-10"
     >
       <span @click="toggleMenu">
-        <nuxt-link to="/landing">
+        <nuxt-link to="/">
           <p style="color: white">Home</p>
         </nuxt-link>
       </span>
@@ -70,8 +70,8 @@
           <p style="color: white">Bands</p>
         </nuxt-link>
       </span>
-      <span @click="logOutMethod">
-        <nuxt-link to="/">
+      <span @click="toggleMenu">
+        <nuxt-link to="/login">
           <p style="color: white">Login/Signout</p>
         </nuxt-link>
       </span>

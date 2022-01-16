@@ -283,10 +283,9 @@ export default {
         this.formValues
       const band = await this.$strapi.create('bands', {
         name,
-        // coverMainUrl: this.coverMainUrlLocal,
+        coverMainUrl: this.coverMainUrlLocal,
 
-        coverMain: 'this is what we need to figure out',
-        coverMainId: this.coverMainId,
+        // coverMain: 'this is what we need to figure out',
         albums: [
           {
             title: this.albumTitle,
@@ -306,7 +305,7 @@ export default {
       })
       console.log(band, 'this is the final band ')
 
-      this.step = 2
+      this.$router.push('/')
     },
   },
 }
