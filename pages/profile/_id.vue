@@ -68,7 +68,20 @@
         />
       </div>
       <!-- container for the list items -->
-      <div class="flex">
+      <!-- genre -->
+      <div v-if="band.genre" class="flex">
+        <h6 class="flex-1 font-medium">Genre</h6>
+        <div style="margin-top: 12px" class="flex-1">
+          <p>{{ band.genre }}</p>
+        </div>
+      </div>
+      <div v-if="band.city && band.state" class="flex">
+        <h6 class="flex-1 font-medium">Hometown</h6>
+        <div style="margin-top: 12px" class="flex-1">
+          <p>{{ band.city }} {{ band.state }}</p>
+        </div>
+      </div>
+      <div v-if="band.members" class="flex">
         <h6 class="flex-1 font-medium">Members</h6>
         <div class="flex-1">
           <p
@@ -81,22 +94,6 @@
           </p>
         </div>
       </div>
-      <!-- genre -->
-      <div class="flex">
-        <h6 class="flex-1 font-medium">Genre</h6>
-        <div style="margin-top: 12px" class="flex-1">
-          <p>{{ band.genre }}</p>
-        </div>
-      </div>
-      <!-- container for the list items -->
-      <!-- <div class="flex pt-4">
-        <h6 class="flex-1 mt-0 font-medium">Links</h6>
-        <div class="flex-1">
-          <nuxt-link v-for="(link, index) in links" :key="link + index" to="/">
-            {{ link.text }},</nuxt-link
-          >
-        </div>
-      </div> -->
     </section>
     <section v-else class="pl-8">
       <FormulateForm v-model="bandInfo" @submit="submitBandInfo">
@@ -157,30 +154,35 @@
           label="Who is the band?"
           add-label="+ Add Member"
         >
+          <!-- refactor without using the Formulate Forms -->
           <FormulateInput
+            v-for="member in band.members"
+            :key="member.memberName"
             name="memberName"
             validation="required"
             label="memberName"
+            :value="member.memberName || 'name'"
           />
         </FormulateInput>
 
-        <FormulateInput type="submit" label="next" />
+        <FormulateInput type="submit" label="update" />
       </FormulateForm>
     </section>
     <!-- Put the album slider here  -->
     <section v-if="songList" class="px-4 pt-8">
       <div class="flex items-center">
         <h2 class="flex-grow font-bold">Albums</h2>
+        <p class="pr-4">Add Album</p>
         <img
           v-if="userId === band.users_permissions_user.id"
           class="h-8 w-8"
-          src="http://localhost:3000/editing.svg"
+          src="http://localhost:3000/more.svg"
           alt=""
         />
       </div>
       <carousel :pagination-padding="5" :per-page-custom="[[300, 1]]">
         <slide v-for="(album, index) in band.albums" :key="album + index">
-          <div class="p-1" @click="changeAlbum(index)">
+          <div class="p-1 relative" @click="changeAlbum(index)">
             <img
               style="height: 250px"
               class="object-cover w-full"
@@ -190,6 +192,12 @@
             <div class="w-full h-14 bg-black p-4">
               <p class="text-green-400 mt-0 text-lg">{{ album.title }}</p>
             </div>
+            <img
+              v-if="userId === band.users_permissions_user.id"
+              class="h-10 w-10 absolute top-4 right-4"
+              src="http://localhost:3000/editing_white.svg"
+              alt=""
+            />
           </div>
         </slide>
       </carousel>
@@ -237,29 +245,6 @@ export default {
       songList: null,
       popEdit: false,
       editComp: 'MainCoverEdit',
-      members: ['Jack Richards', 'Peter Michales', 'Rod Dick', 'Nick Rogers'],
-      upcomingEvents: [
-        'At the Dean Oct 1 7:00pm',
-        'The Wicked Nov 10 7:00pm',
-        'At the Dean Oct 1 7:00pm',
-      ],
-      links: [
-        {
-          text: 'thepunks.com',
-          link: 'https:google.com',
-          icon: 'web.svg',
-        },
-        {
-          text: 'facebook.com',
-          link: 'https:google.com',
-          icon: 'facebook.svg',
-        },
-        {
-          text: 'twiiter',
-          link: 'https:google.com',
-          icon: 'twitter.svg',
-        },
-      ],
     }
   },
   mounted() {
@@ -273,17 +258,19 @@ export default {
 
   methods: {
     async submitBandInfo() {
-      const { name, genre, phone, members, email, city, state } = this.bandInfo
-      const bandUpdated = await this.$strapi.update('bands', this.bandId, {
+      const { name, city, state, email, phone, genre, members } = this.bandInfo
+
+      const bandUpdated = await this.$strapi.update('bands', 81, {
         name,
-        genre,
-        phone,
-        members,
-        email,
         city,
         state,
+        members,
+        email,
+        phone,
+        genre,
       })
       console.log(bandUpdated)
+      this.editBandInfo = false
     },
     log() {
       console.log('hello')

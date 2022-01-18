@@ -301,7 +301,6 @@ export default {
         members,
         state,
         users_permissions_user: this.userId,
-        // members,
       })
       console.log(band, 'this is the final band ')
 

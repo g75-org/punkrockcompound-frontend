@@ -7,7 +7,7 @@
           <div class="w-1/4">email:</div>
           <input
             v-model="identifier"
-            class="border border-primary ml-4 pl-4 w-3/4"
+            class="border ml-4 pl-4 w-3/4"
             type="text"
           />
         </div>
@@ -16,65 +16,36 @@
           <input
             v-model="password"
             class="border border-primary ml-4 pl-4 w-3/4"
-            :type="showPass ? 'text' : 'password'"
           />
         </div>
         <button class="button-1 mt-4" @click="login">login</button>
-        <button class="button-1 mt-4" @click="login">login</button>
-        <section>{{ identifier }}</section>
+        <button class="button-1 mt-4" @click="logoutUser">logout</button>
       </div>
     </div>
-
-    <!-- if logginIn show stuff -->
-    <div v-if="token" class="mt-16">
-      <hr />
-      token: {{ token }}
-    </div>
-    <pre v-if="user">user: {{ user }}</pre>
-
-    <div>
-      <div>{{ identifier }}</div>
-      <div>{{ password }}</div>
-      <div v-show="isDev">isDev: {{ isDev }}</div>
-      <div>backendUrl: {{ backendUrl }}</div>
-      <div>frontendUrl: {{ frontendUrl }}</div>
-    </div>
-    <hr />
-    <nuxt-content :document="page" />
   </div>
 </template>
 
 <script>
 export default {
-  async asyncData({ $content, $config: { backendUrl, frontendUrl, isDev } }) {
-    const page = await $content('index').fetch()
-    return {
-      page,
-      backendUrl,
-      frontendUrl,
-      isDev,
-      // identifier: isDev ? 'admin@email.com' : '',
-      // password: isDev ? 'password' : '',
-      identifier: '',
-      password: '',
-      bands: null,
-    }
-  },
   emits: ['login'],
   data: () => {
     return {
-      showPass: false,
+      identifier: '',
+      password: '',
       token: null,
       user: null,
     }
   },
   methods: {
+    async logoutUser() {
+      await this.$strapi.logout()
+      this.$router.push('/')
+    },
     async login() {
       const { user, jwt: token } = await this.$strapi.login({
         identifier: this.identifier,
         password: this.password,
       })
-      console.log(user, token) // eslint-disable-line no-console
       this.token = token
       this.user = user
       this.$router.push('/')
