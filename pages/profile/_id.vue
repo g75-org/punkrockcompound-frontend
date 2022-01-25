@@ -269,6 +269,7 @@ export default {
         phone,
         genre,
       })
+      this.band = bandUpdated
       console.log(bandUpdated)
       this.editBandInfo = false
     },

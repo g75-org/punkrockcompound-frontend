@@ -20,7 +20,7 @@
       title="coming up next"
       :album="album"
     />
-    <MobileSlider :bandsInSlider="bandsInSlider" />
+    <MobileSlider :sliderContent="sliderContent" />
   </div>
 </template>
 
@@ -36,15 +36,21 @@ export default {
     // Picks out an album from the featured band
     const album = featured?.albums[0] || null
     // filters out the featured band from the slider
-    const bandsInSlider = bands.filter((b) => {
-      return b.name !== featured.name
-    })
+    const sliderContent = bands
+      .filter((b) => b.name !== featured.name)
+      .map((slider) => {
+        return {
+          // id: slider.id,
+          name: slider.name,
+          src: slider.coverMainUrl,
+        }
+      })
     // now to get the audio player going
 
     return {
       bands,
       featured,
-      bandsInSlider,
+      sliderContent,
       album,
       userProfileId,
     }
